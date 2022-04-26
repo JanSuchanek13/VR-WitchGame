@@ -16,6 +16,9 @@ public class LocomotionController : MonoBehaviour
     public GameObject leftTeleportReticle;
     public GameObject rightTeleportReticle;
 
+    public bool EnableLeftTeleportation { get; set; } = true;
+    public bool EnableRightTeleportation { get; set; } = true;
+
     void Start()
     {
         InitializeTeleportRay(leftTeleportRay);
@@ -31,8 +34,8 @@ public class LocomotionController : MonoBehaviour
 
     void Update()
     {
-        ManageTeleportRay(leftTeleportRay, ref leftButtonPressedLastFrame, leftTeleportReticle, leftTeleportEnabled);
-        ManageTeleportRay(rightTeleportRay, ref rightButtonPressedLastFrame, rightTeleportReticle, rightTeleportEnabled);
+        ManageTeleportRay(leftTeleportRay, ref leftButtonPressedLastFrame, leftTeleportReticle, EnableLeftTeleportation);
+        ManageTeleportRay(rightTeleportRay, ref rightButtonPressedLastFrame, rightTeleportReticle, EnableRightTeleportation);
     }
 
     void ManageTeleportRay(XRController teleportRay, ref bool buttonPressedLastFrame, GameObject teleportReticle, bool teleportEnabled)
