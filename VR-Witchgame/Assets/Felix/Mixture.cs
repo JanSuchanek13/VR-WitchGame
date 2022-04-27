@@ -6,6 +6,8 @@ public class Mixture : MonoBehaviour
 {
     #region Variables
     [Header("Mixture variables:")]
+    [SerializeField] float minPitch = 1f;
+    [SerializeField] float maxPitch = 2f;
     // when adding anything to the pot (actual ingredients and otherwise):
     [SerializeField] AudioSource addedSomething_Sound; // high pitched "plopp" sound
     [SerializeField] ParticleSystem addedSomething_Effect; //drops squirting out in the current color
@@ -37,12 +39,6 @@ public class Mixture : MonoBehaviour
         color_G_component = colorOfMixture.g;
         color_B_component = colorOfMixture.b;
         color_A_component = colorOfMixture.a;
-
-        //currentIngredientList = null;
-        //Debug.Log("current Ingredients: " + currentIngredientList);
-        //Debug.Log("base color is " + baseColor);
-        //Invoke("ChangeColor", 3f); // testing
-        //StartCoroutine(ExecuteCode(1f));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -74,7 +70,7 @@ public class Mixture : MonoBehaviour
                     {
                         color_B_component = 255;
                     }
-                    color_A_component += other.GetComponent<Ingredient>().additiveColor.a / 3; //the regular alpha of the object is 255, needs to be a fraction (3)
+                    color_A_component += other.GetComponent<Ingredient>().additiveColor.a / 3; // the regular alpha of the object is 255, needs to be a fraction (3)
                     if (color_A_component > 255)
                     {
                         color_A_component = 255;
@@ -96,15 +92,14 @@ public class Mixture : MonoBehaviour
             bool opaqueSpill = true;
             int saveOldAlpha = color_A_component;
             usedIngredient = other.gameObject;
+            //addedSomething_Sound.pitch = Random.Range(minPitch, maxPitch);
             //addedSomething_Sound.Play();
             ParticleSystem.MainModule settings = addedSomething_Effect.GetComponent<ParticleSystem>().main;
             if(color_A_component != 255) // change color of splash to fully opaque
             {
-                //Debug.Log(colorOfMixture);
                 opaqueSpill = false;
                 color_A_component = 255;
                 colorOfMixture = new Color32((byte)color_R_component, (byte)color_G_component, (byte)color_B_component, (byte)color_A_component); // determine new color here
-                //Debug.Log(colorOfMixture);
             }
             settings.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
             addedSomething_Effect.Play();
@@ -119,7 +114,6 @@ public class Mixture : MonoBehaviour
                 opaqueSpill = true;
                 color_A_component = saveOldAlpha;
                 colorOfMixture = new Color32((byte)color_R_component, (byte)color_G_component, (byte)color_B_component, (byte)color_A_component); // determine new color here
-                //Debug.Log(colorOfMixture);
             }
             if (other.tag == "vial" && potionIsReady == true)
             {
@@ -134,55 +128,10 @@ public class Mixture : MonoBehaviour
     }
     void CookPotion()
     {
+        //poof_Sound.pitch = Random.Range(minPitch * 2, maxPitch * 2); // louder than just adding stuff
         //poof_Sound.Play();
         //poof_Effect.Play();
         potionEffect = currentIngredientList; // potionEffect is the public var. that is used by vial to pick up the potion.
         potionIsReady = true;
     }
-
-
-
-    // *********
-    void ChangeColor()
-    {
-        //baseColor.GetComponent<BaseMap>().
-        //Call SetColor using the shader property name "_Color" and setting the color to red
-        //baseColor.SetColor("_Color", Color.red);
-        Color red = new Color(1, 0, 0, .3f);
-        //baseColor = Color.red;
-        baseColor = red;
-        this.GetComponent<MeshRenderer>().material.color = red;
-        Debug.Log("I should be red now!");
-        Debug.Log(baseColor);
-
-    }
-
-    /*IEnumerator ExecuteAfterTime(float time)
-     {
-         yield return new WaitForSeconds(time);
-
-         // Code to execute after the delay
-     }
-
-
-     private bool isCoroutineExecuting = false;
-
-     IEnumerator ExecuteAfterTime(float time)
-     {
-         if (isCoroutineExecuting)
-             yield break;
-
-         isCoroutineExecuting = true;
-
-         yield return new WaitForSeconds(time);
-
-         // Code to execute after the delay
-
-         isCoroutineExecuting = false;
-     }
-     // Update is called once per frame
-     void Update()
-     {
-
-     }*/
 }

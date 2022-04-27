@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Kettle
+  - mixture
+  - vial
+  - Ing_1
+  - Ing_2
+  - Ing_3
+  - LevelBoundaries
   layers:
   - Default
   - TransparentFX

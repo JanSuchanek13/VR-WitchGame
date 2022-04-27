@@ -5,135 +5,168 @@ using UnityEngine;
 public class Vial : MonoBehaviour
 {
     #region Variables
-    [Header("Vial variables:")]
+    [Header("General Variables:")]
     [SerializeField] GameObject liquidInVial;
     [SerializeField] GameObject cork; // by having a cork we dont lose coherence of the liquid having an open vial upside down!
+    [SerializeField] AudioSource glasBruch_Sound; // always is set to play, no matter the other effects // should have lesser "priority"!
+    [SerializeField] float minPitch = 1f;
+    [SerializeField] float maxPitch = 2f;
+    [SerializeField] float timeToDestruct = .2f;
+    
+    [Header("SHRINK-Potion (2):")]
     [SerializeField] AudioSource effect1_Sound;
     [SerializeField] ParticleSystem effect1_Effect;
+    [SerializeField] float minimumShrinkEffect = 1.3f;
+    [SerializeField] float maximumShrinkEffect = 5f;
+    
+    [Header("GROW-Potion (3):")]
     [SerializeField] AudioSource effect2_Sound;
     [SerializeField] ParticleSystem effect2_Effect;
+    [SerializeField] float minimumGrowEffect = 1.3f;
+    [SerializeField] float maximumGrowEffect = 4f;
+    
+    [Header("COLOR-Potion (4):")]
     [SerializeField] AudioSource effect3_Sound;
     [SerializeField] ParticleSystem effect3_Effect;
+    
+    [Header("EXPLOSION-Potion (5):")]
     [SerializeField] AudioSource effect4_Sound;
     [SerializeField] ParticleSystem effect4_Effect;
+    [SerializeField] float explosionRadius = 3f;
+    [SerializeField] float explosionForce = 5f;
+    
+    [Header("FLOAT-Potion (6):")]
     [SerializeField] AudioSource effect5_Sound;
     [SerializeField] ParticleSystem effect5_Effect;
-    [SerializeField] AudioSource effect6_Sound;
-    [SerializeField] ParticleSystem effect6_Effect;
 
     [Header("handshakes - DON'T TOUCH!")]
-    Color32 colorOfMixture;
-    bool vialWasFilled = false;
-    int potionType;
-    public bool wasThrownOrDropped = false;
-
-    
-    int color_R_component;
-    int color_G_component;
-    int color_B_component;
-    int color_A_component;
-    int amountOfIngredients = 0;
-    int currentIngredientList = 0;
-    GameObject usedIngredient;
-    public int potionEffect = 0;
-    public bool potionIsReady = false;
+    Color32 currentColor;
+    [SerializeField] bool vialIsArmed = false; // only serialized for testing
+    [SerializeField] int potionType = 0; // only serialized for testing
+    public bool wasThrownOrDropped = false; // handshake for JAN VR Lokomotion, to be turnt "true" when it is thrown or dropped to "arm" the potion
     #endregion
 
     public void FillVial(int potionEffect, Color32 potionColor)
     {
-        vialWasFilled = true;
+        vialIsArmed = true;
         cork.SetActive(true);
         liquidInVial.GetComponent<MeshRenderer>().material.color = potionColor; // determine new color here
         potionType = potionEffect; // determine the effect of the vial here:
-        Debug.Log("The vial was filled!");
+        currentColor = potionColor;
+        Debug.Log("The vial was filled and has effect: " + potionEffect);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(wasThrownOrDropped == true)
+        if(wasThrownOrDropped == true && vialIsArmed == true) // this is to check if the potion actually left the hand of the player
         {
-            GetPotionEffect(collision);
+            vialIsArmed = false; // this should prevent the flaks reacting multiple times when hitting multiple things
+            GetPotionEffect(collision); // this gets the corresponding effect to the potion carried and applies it to the collision target
         }
     }
 
-    void GetPotionEffect(Collision collision)
+    void GetPotionEffect(Collision collision) 
     {
         switch (potionType)
         {
-            case 1: // should be redundant
-                print("effect 1");
+            // no case 1 as currently impossible to make with the ingredients
+            case 2: print("shrink");
+
+                //juice:
+                //glasBruch_Sound.pitch = Random.Range(minPitch, maxPitch)
+                //glasBruch_Sound.Play();
+                //effect1_Sound.pitch = Random.Range(minPitch, maxPitch);
                 //effect1_Sound.Play();
                 //effect1_Effect.Play();
+
                 //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
+                if (collision.gameObject.tag != "LevelBoundaries") // should prevent outer walls to be modded
+                {
+                    float randomShrinkNumber = Random.Range(minimumShrinkEffect, maximumShrinkEffect);
+                    collision.gameObject.GetComponent<Transform>().localScale /= randomShrinkNumber;
+                }
+                Invoke("DestroyThis", timeToDestruct);
                 break;
-            case 2:
-                print("effect 2");
+
+            case 3: print("grow");
+
+                //juice:
+                //glasBruch_Sound.pitch = Random.Range(minPitch, maxPitch)
+                //glasBruch_Sound.Play();
+                //effect2_Sound.pitch = Random.Range(minPitch, maxPitch);
                 //effect2_Sound.Play();
                 //effect2_Effect.Play();
+
                 //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
+                if (collision.gameObject.tag != "LevelBoundaries") // should prevent outer walls to be modded
+                {
+                    float randomGrowNumber = Random.Range(minimumGrowEffect, maximumGrowEffect);
+                    collision.gameObject.GetComponent<Transform>().localScale *= randomGrowNumber;
+                }
+                Invoke("DestroyThis", timeToDestruct);
                 break;
-            case 3:
-                print("effect 3");
+
+            case 4: print("color");
+                //juice:
+                //glasBruch_Sound.pitch = Random.Range(minPitch, maxPitch)
+                //glasBruch_Sound.Play();
+                //effect3_Sound.pitch = Random.Range(minPitch, maxPitch);
                 //effect3_Sound.Play();
                 //effect3_Effect.Play();
+
                 //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
+                collision.gameObject.GetComponent<MeshRenderer>().material.color = currentColor;
+                Invoke("DestroyThis", timeToDestruct);
                 break;
-            case 4:
-                print("effect 4");
+
+            case 5: print("explosion");
+
+                //juice:
+                //glasBruch_Sound.pitch = Random.Range(minPitch, maxPitch)
+                //glasBruch_Sound.Play();
+                //effect4_Sound.pitch = Random.Range(minPitch, maxPitch);
                 //effect4_Sound.Play();
                 //effect4_Effect.Play();
+
                 //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
+                Collider[] objectsInExplosionRadius = Physics.OverlapSphere(transform.position, explosionRadius);   //all Objects in explosion Range
+                foreach (Collider i in objectsInExplosionRadius)
+                {
+                    Rigidbody rig = i.GetComponent<Rigidbody>();
+                    if (rig != null && rig.isKinematic == false) // this is for explosion to not blast walls of the scene off
+                    {
+                        rig.AddExplosionForce(explosionForce, transform.position, explosionRadius, 1f, ForceMode.Impulse);
+                    }
+                }
+                Invoke("DestroyThis", timeToDestruct);
                 break;
-            case 5:
-                print("effect 5");
+
+            case 6: print("float");
+                
+                //juice:
+                //glasBruch_Sound.pitch = Random.Range(minPitch, maxPitch)
+                //glasBruch_Sound.Play();
+                //effect5_Sound.pitch = Random.Range(minPitch, maxPitch);
                 //effect5_Sound.Play();
                 //effect5_Effect.Play();
+
                 //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
+                if (collision.gameObject.tag != "LevelBoundaries")
+                {
+                    collision.gameObject.GetComponent<Rigidbody>().mass = 0;
+                    collision.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                    collision.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                }
+                Invoke("DestroyThis", timeToDestruct);
                 break;
-            case 6:
-                print("effect 6");
-                //effect6_Sound.Play();
-                //effect6_Effect.Play();
-                //effect:
-                collision.gameObject.GetComponent<Transform>().localScale = new Vector3(0f, 0f, 0f);
-                Debug.Log("the hit target: " + collision.gameObject.name + "should now be scaled down to 0");
-                Invoke("DestroyThis", .5f);
-                break;
+
             default:
                 print("Incorrect potion effect.");
                 break;
         }
     }
-
     void DestroyThis()
     {
-        Destroy(this);
-    }
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Destroy(this.gameObject);
     }
 }
