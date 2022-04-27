@@ -89,6 +89,18 @@ public class Mixture : MonoBehaviour
                     }
                 }
             }
+
+            // reset the Mixture:
+            if(other.tag == "Neutralizer")
+            {
+                colorOfMixture = baseColor; // reset mixture color.
+                this.GetComponent<MeshRenderer>().material.color = colorOfMixture; // apply color here.
+                currentIngredientList = 0; // reset ingredient-list.
+                amountOfIngredients = 0; // reset ingredient-counter.
+                potionIsReady = false; // can reset the mixture, even if it was done.
+            }
+
+            // juice effect for dropping something into the pot:
             bool opaqueSpill = true;
             int saveOldAlpha = color_A_component;
             usedIngredient = other.gameObject;
@@ -104,8 +116,8 @@ public class Mixture : MonoBehaviour
             settings.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
             addedSomething_Effect.Play();
 
-                //clean up:
-                if (other.tag != "vial")
+            // clean up:
+            if (other.tag != "vial")
             {
                 Invoke("DestroyIngredient", .5f); // get rid of the dropped item:
             }
@@ -124,6 +136,7 @@ public class Mixture : MonoBehaviour
     void DestroyIngredient()
     {
         Destroy(usedIngredient);
+        //usedIngredient.SetActive(false);
         usedIngredient = null;
     }
     void CookPotion()

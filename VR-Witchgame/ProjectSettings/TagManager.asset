@@ -11,6 +11,7 @@ TagManager:
   - Ing_2
   - Ing_3
   - LevelBoundaries
+  - Neutralizer
   layers:
   - Default
   - TransparentFX
