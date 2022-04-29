@@ -8089,7 +8089,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mixingStationPrefab: {fileID: 673483969}
-  wasActivated: 0
 --- !u!135 &1788395231
 SphereCollider:
   m_ObjectHideFlags: 0

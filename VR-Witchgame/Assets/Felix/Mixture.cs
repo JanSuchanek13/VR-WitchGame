@@ -43,7 +43,7 @@ public class Mixture : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag != "Kettle" && other.tag != "mixture") // dont splash by default.
+        if(other.tag != "Kettle" && other.tag != "mixture" && other.tag != "LevelBoundaries") // dont splash by default.
         {
             if (other.GetComponent<Ingredient>() && other.GetComponent<Ingredient>().wasUsed == false)
             {
@@ -98,6 +98,8 @@ public class Mixture : MonoBehaviour
                 currentIngredientList = 0; // reset ingredient-list.
                 amountOfIngredients = 0; // reset ingredient-counter.
                 potionIsReady = false; // can reset the mixture, even if it was done.
+                Debug.Log("The mixture should have been reset now!");
+                Debug.Log("color " + colorOfMixture + "; current value of Ingredients: " + currentIngredientList + "; number of different ing. in pot: " + amountOfIngredients + "; is the potion read?: " + potionIsReady);
             }
 
             // juice effect for dropping something into the pot:
@@ -117,7 +119,7 @@ public class Mixture : MonoBehaviour
             addedSomething_Effect.Play();
 
             // clean up:
-            if (other.tag != "vial")
+            if (other.tag != "vial" && other.tag != "Player") // dont destroy player or vial when touching mixture:
             {
                 Invoke("DestroyIngredient", .5f); // get rid of the dropped item:
             }

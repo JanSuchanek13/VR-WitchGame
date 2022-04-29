@@ -12,7 +12,8 @@ public class GetNewIngredients : MonoBehaviour
     [SerializeField] GameObject mixingStationPrefab; // table with all the ingredients saved here
     GameObject currentMixingStation; // table with all the ingredients saved here
     Vector3 mixingStationRotation;
-    public bool wasActivated = false;
+    //public bool wasActivated = false; // will be redundant if the Trigger works
+    bool inUse = false;
     //Vector3 rot = transform.rotation.eulerAngles;
 
 
@@ -25,13 +26,30 @@ public class GetNewIngredients : MonoBehaviour
         currentMixingStation.SetActive(true);
     }
 
-    void Update()
+    /*void Update() // will be redundant if the Trigger works
     {
         if (wasActivated)
         {
             ResetTheTable();
             wasActivated = false;
         }
+    }*/
+
+    private void OnTriggerEnter(Collider other) // this is so you can reset the table 
+    {
+        if(other.tag == "Player" && inUse == false)
+        {
+            inUse = true;
+            ResetTheTable();
+            StartCoroutine(CoolDown());
+            Debug.Log("Reset-Button was pressed! Starting CoolDown now.");
+        }
+    }
+    IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(5);
+        inUse = false;
+        Debug.Log("Reset-Button-Cooldown is over, you may press again!");
     }
     private void OnMouseDown() // doesnt work, dont know why, makes no sense
     {
