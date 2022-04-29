@@ -7,13 +7,16 @@ public class Ingredient : MonoBehaviour
     public bool ingredient_1 = false;
     public bool ingredient_2 = false;
     public bool ingredient_3 = false;
-    public Color32 additiveColor;
+
+    [SerializeField] Material ingredientColor;
+    public Color32 additiveColor; // on hold because other solutions are needed
     public int effect = 0;
     public bool wasUsed = false;
     void Start()
     {
         // save my color to hand over if used:
-        additiveColor = this.GetComponent<MeshRenderer>().material.color;
+        //additiveColor = this.GetComponent<MeshRenderer>().material.color;// on hold because other solutions are needed
+        additiveColor = ingredientColor.color;
 
         // find out what type of ingredient I am:
         if (this.tag == "Ing_1")

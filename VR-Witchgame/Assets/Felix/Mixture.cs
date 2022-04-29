@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Mixture : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class Mixture : MonoBehaviour
     [SerializeField] ParticleSystem addedSomething_Effect; //drops squirting out in the current color
     // when you successfully added two actual ingredients:
     [SerializeField] AudioSource poof_Sound;
-    [SerializeField] ParticleSystem poof_Effect;
+    //[SerializeField] ParticleSystem poof_Effect; // Susi used a GO instead of PE
+    [SerializeField] GameObject poof_Effect;
     
     [Header("handshakes - DON'T TOUCH!")]
     Color32 baseColor;
@@ -51,6 +53,8 @@ public class Mixture : MonoBehaviour
                 {
                     Debug.Log("an ingredient was thrown in the pot");
                     usedIngredient = other.gameObject;
+
+                    //usedIngredient = other.GetComponentInParent<GameObject>();
                     other.GetComponent<Ingredient>().wasUsed = true;
                     amountOfIngredients++;
 
@@ -95,6 +99,21 @@ public class Mixture : MonoBehaviour
             {
                 colorOfMixture = baseColor; // reset mixture color.
                 this.GetComponent<MeshRenderer>().material.color = colorOfMixture; // apply color here.
+
+                poof_Effect.SetActive(false);
+                /*ParticleSystem.MainModule bigCloud = poof_Effect.GetComponent<ParticleSystem>().main;
+                ParticleSystem.MainModule fireSparks = poof_Effect.GetComponentInChildren<ParticleSystem>().main;
+                poof_Effect.GetComponentInChildren<Light>().color = colorOfMixture;
+                bigCloud.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
+                fireSparks.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
+                poof_Effect.GetComponentInChildren<Light>().enabled = false; // this turns off lamp when resetting the mixture!*/
+                
+                // reset the mixing channels:
+                color_R_component = colorOfMixture.r;
+                color_G_component = colorOfMixture.g;
+                color_B_component = colorOfMixture.b;
+                color_A_component = colorOfMixture.a;
+
                 currentIngredientList = 0; // reset ingredient-list.
                 amountOfIngredients = 0; // reset ingredient-counter.
                 potionIsReady = false; // can reset the mixture, even if it was done.
@@ -145,7 +164,44 @@ public class Mixture : MonoBehaviour
     {
         //poof_Sound.pitch = Random.Range(minPitch * 2, maxPitch * 2); // louder than just adding stuff
         //poof_Sound.Play();
+
         //poof_Effect.Play();
+
+        // amplify crazy colors:
+        float color_R_component = colorOfMixture.r;
+        float color_G_component = colorOfMixture.g;
+        float color_B_component = colorOfMixture.b;
+        //Debug.Log(colorOfMixture);
+        if(color_R_component > color_G_component && color_R_component > color_B_component) // if RED dominant
+        {
+            color_R_component = 255;
+            color_G_component *= 8f;
+            color_B_component *= 8f;
+        }else if(color_R_component < color_G_component && color_G_component > color_B_component) // if GREEN dominant
+        {
+            color_R_component *= .8f;
+            color_G_component = 255;
+            color_B_component *= 8f;
+        }else // if BLUE dominant
+        {
+            color_R_component *= .8f;
+            color_G_component *= 8f;
+            color_B_component = 255;
+        }
+        colorOfMixture = new Color32((byte)color_R_component, (byte)color_G_component, (byte)color_B_component, (byte)color_A_component); // determine new color here
+        this.GetComponent<MeshRenderer>().material.color = colorOfMixture; // apply color here
+        //Debug.Log(colorOfMixture);
+
+        ParticleSystem.MainModule bigCloud = poof_Effect.GetComponent<ParticleSystem>().main;
+        ParticleSystem.MainModule fireSparks = poof_Effect.GetComponentInChildren<ParticleSystem>().main;
+        poof_Effect.GetComponentInChildren<Light>().color = colorOfMixture;
+        bigCloud.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
+        //Debug.Log("big cloud color: " + poof_Effect.GetComponentInChildren<Light>().color);
+        fireSparks.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
+        //Debug.Log("small fire cracker color: " + fireSparks.startColor);
+        poof_Effect.GetComponentInChildren<Light>().enabled = true; // this reacts to the pot being reset and lamps turnt off!
+        poof_Effect.SetActive(true);
+
         potionEffect = currentIngredientList; // potionEffect is the public var. that is used by vial to pick up the potion.
         potionIsReady = true;
     }
