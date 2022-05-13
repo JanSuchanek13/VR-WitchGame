@@ -8,7 +8,7 @@ public class VRMap
     public Transform vrTarget;
     public Transform rigTarget;
     public Vector3 trackingPositionOffset;
-    public Vector2 trackingRotationOffset;
+    public Vector3 trackingRotationOffset;
 
     public void Map()
     {
@@ -19,6 +19,7 @@ public class VRMap
 
 public class VRRig : MonoBehaviour
 {
+    public int turnSmoothness = 5;
     public VRMap head;
     public VRMap leftHand;
     public VRMap rightHand;
