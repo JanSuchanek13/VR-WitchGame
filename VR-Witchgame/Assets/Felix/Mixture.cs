@@ -26,7 +26,6 @@ public class Mixture : MonoBehaviour
     int amountOfIngredients = 0;
     int currentIngredientList = 0;
     GameObject usedIngredient;
-    // publics:
     public Color32 colorOfMixture;
     public int potionEffect = 0;
     public bool potionIsReady = false;
