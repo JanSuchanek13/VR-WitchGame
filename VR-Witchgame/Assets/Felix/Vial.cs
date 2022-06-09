@@ -7,6 +7,7 @@ public class Vial : MonoBehaviour
     #region Variables
     [Header("General Variables:")]
     [SerializeField] GameObject liquidInVial;
+    [SerializeField] Light liquidShine;
     [SerializeField] GameObject cork; // by having a cork we dont lose coherence of the liquid having an open vial upside down!
     [SerializeField] AudioSource glasBruch_Sound; // always is set to play, no matter the other effects // should have lesser "priority"!
     [SerializeField] float minPitch = 1f;
@@ -50,7 +51,15 @@ public class Vial : MonoBehaviour
     {
         vialIsArmed = true;
         cork.SetActive(true);
+        liquidInVial.SetActive(true);
         liquidInVial.GetComponent<MeshRenderer>().material.color = potionColor; // determine new color here
+                                                                                //emissionSourceMaterial.EnableKeyword("_EMISSION");
+                                                                                //liquidInVial.GetComponent<Material>().EnableKeyword("_EMISSION");
+        liquidInVial.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
+
+        liquidInVial.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", potionColor);
+        liquidShine.enabled = true;
+        liquidShine.color = potionColor;
         potionType = potionEffect; // determine the effect of the vial here:
         currentColor = potionColor;
         Debug.Log("The vial was filled and has effect: " + potionEffect);
