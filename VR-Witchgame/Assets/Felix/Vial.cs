@@ -55,11 +55,10 @@ public class Vial : MonoBehaviour
         liquidInVial.GetComponent<MeshRenderer>().material.color = potionColor; // determine new color here
                                                                                 //emissionSourceMaterial.EnableKeyword("_EMISSION");
                                                                                 //liquidInVial.GetComponent<Material>().EnableKeyword("_EMISSION");
-        liquidInVial.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
-
+        /*liquidInVial.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
         liquidInVial.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", potionColor);
         liquidShine.enabled = true;
-        liquidShine.color = potionColor;
+        liquidShine.color = potionColor;*/
         potionType = potionEffect; // determine the effect of the vial here:
         currentColor = potionColor;
         Debug.Log("The vial was filled and has effect: " + potionEffect);

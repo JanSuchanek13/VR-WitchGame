@@ -14,7 +14,8 @@ public class Mixture : MonoBehaviour
     [SerializeField] ParticleSystem addedSomething_Effect; //drops squirting out in the current color
     // when you successfully added two actual ingredients:
     [SerializeField] AudioSource poof_Sound;
-    //[SerializeField] ParticleSystem poof_Effect; // Susi used a GO instead of PE
+    [SerializeField] AudioSource simmering_Sound;
+    [SerializeField] ParticleSystem potionDone_Effect; 
     [SerializeField] GameObject poof_Effect;
     
     [Header("handshakes - DON'T TOUCH!")]
@@ -46,8 +47,11 @@ public class Mixture : MonoBehaviour
     {
         if(other.tag != "Kettle" && other.tag != "mixture" && other.tag != "LevelBoundaries") // dont splash by default.
         {
+            addedSomething_Sound.Play(); // splash
+
             if (other.GetComponent<Ingredient>() && other.GetComponent<Ingredient>().wasUsed == false)
             {
+                simmering_Sound.Play(); // start cooking
                 if (amountOfIngredients < 2)
                 {
                     Debug.Log("an ingredient was thrown in the pot");
@@ -116,6 +120,9 @@ public class Mixture : MonoBehaviour
                 currentIngredientList = 0; // reset ingredient-list.
                 amountOfIngredients = 0; // reset ingredient-counter.
                 potionIsReady = false; // can reset the mixture, even if it was done.
+
+                simmering_Sound.Stop(); // stop cooking sound
+                potionDone_Effect.Stop();
                 Debug.Log("The mixture should have been reset now!");
                 Debug.Log("color " + colorOfMixture + "; current value of Ingredients: " + currentIngredientList + "; number of different ing. in pot: " + amountOfIngredients + "; is the potion read?: " + potionIsReady);
             }
@@ -162,9 +169,9 @@ public class Mixture : MonoBehaviour
     void CookPotion()
     {
         //poof_Sound.pitch = Random.Range(minPitch * 2, maxPitch * 2); // louder than just adding stuff
-        //poof_Sound.Play();
+        poof_Sound.Play();
 
-        //poof_Effect.Play();
+        simmering_Sound.pitch *= 2;
 
         // amplify crazy colors:
         float color_R_component = colorOfMixture.r;
@@ -192,6 +199,7 @@ public class Mixture : MonoBehaviour
         //Debug.Log(colorOfMixture);
 
         ParticleSystem.MainModule bigCloud = poof_Effect.GetComponent<ParticleSystem>().main;
+        ParticleSystem.MainModule cookingSteam = potionDone_Effect.GetComponent<ParticleSystem>().main;
         ParticleSystem.MainModule fireSparks = poof_Effect.GetComponentInChildren<ParticleSystem>().main;
         poof_Effect.GetComponentInChildren<Light>().color = colorOfMixture;
         bigCloud.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
@@ -203,5 +211,8 @@ public class Mixture : MonoBehaviour
 
         potionEffect = currentIngredientList; // potionEffect is the public var. that is used by vial to pick up the potion.
         potionIsReady = true;
+
+        cookingSteam.startColor = new ParticleSystem.MinMaxGradient(colorOfMixture);
+        potionDone_Effect.Play();
     }
 }
