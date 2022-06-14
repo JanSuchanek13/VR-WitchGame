@@ -296,7 +296,7 @@ MonoBehaviour:
   m_SelectExited:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6442449451300495797}
         m_TargetAssemblyTypeName: BindActionToDrop, Assembly-CSharp
         m_MethodName: Drop
         m_Mode: 1
