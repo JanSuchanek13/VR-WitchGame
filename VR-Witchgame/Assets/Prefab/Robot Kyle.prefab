@@ -880,11 +880,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1141678482843485447}
-  - component: {fileID: 8793557992827795612}
   - component: {fileID: 5378065716992699947}
   - component: {fileID: 5378065716992699945}
   - component: {fileID: 5378065716992699944}
   - component: {fileID: 5378065716992699941}
+  - component: {fileID: 7136394219818722456}
   m_Layer: 0
   m_Name: Robot Kyle
   m_TagString: Untagged
@@ -909,21 +909,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &8793557992827795612
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4144252087213045524}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 1
 --- !u!95 &5378065716992699947
 Animator:
   serializedVersion: 3
@@ -933,8 +918,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4144252087213045524}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
+  m_Controller: {fileID: 9100000, guid: c4d2fb34abece0a4592de12ea5184581, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1041,23 +1026,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d26bcdc6c2d9049906d9be20aaad78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnSmoothness: 5
   head:
-    vrTarget: {fileID: 0}
-    rigTarget: {fileID: 0}
+    vrTarget: {fileID: 4807550210439545631}
+    rigTarget: {fileID: 5378065717845119194}
     trackingPositionOffset: {x: 0, y: 0, z: 0}
-    trackingRotationOffset: {x: 0, y: 0}
+    trackingRotationOffset: {x: 0, y: 0, z: 0}
   leftHand:
     vrTarget: {fileID: 6205989824596075759}
     rigTarget: {fileID: 5378065718127825562}
     trackingPositionOffset: {x: 0, y: 0, z: 0}
-    trackingRotationOffset: {x: 0, y: 0}
+    trackingRotationOffset: {x: 0, y: 0, z: 0}
   rightHand:
     vrTarget: {fileID: 4807550210439545631}
     rigTarget: {fileID: 5378065717845119194}
     trackingPositionOffset: {x: 0, y: 0, z: 0}
-    trackingRotationOffset: {x: 0, y: 0}
+    trackingRotationOffset: {x: 0, y: 0, z: 0}
   headConstraint: {fileID: 5378065718062861673}
   headBodyOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &7136394219818722456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4144252087213045524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d5b39dad986ff46915bb9f9e38aa37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footOffset: {x: 0, y: 0.13, z: 0}
+  rightFootPosWeight: 1
+  rightFootRotWeight: 1
+  leftFootPosWeight: 1
+  leftFootRotWeight: 1
 --- !u!1 &4442887995075863251
 GameObject:
   m_ObjectHideFlags: 0
